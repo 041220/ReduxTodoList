@@ -1,24 +1,24 @@
 import { Row, Tag, Checkbox } from 'antd';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { updateTodo } from '../TodoList/todosSlice';
+
+
+
 
 const priorityColorMapping = {
-    High: 'red',
-    Medium: 'blue',
-    Low: 'gray',
+    high: 'red',
+    medium: 'blue',
+    low: 'gray',
 };
 
-export default function Todo({ name, priority, completed, id }) {
+export default function Todo({ name, piority, completed, id }) {
 
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
+    // const piorityFilter = useSelector((state) => state.filters.piority)
+    // console.log("check piorityFilter: ", piorityFilter);
 
-    const [checked, setChecked] = useState(completed);
+    const toggleCheckbox = async () => {
 
-    const toggleCheckbox = () => {
-        setChecked(!checked);
-        // dispatch(todosSlice.actions.toggleTodoStatus(id))
-        dispatch(updateTodo(id));
+        // await dispatch(update({ id, data: { content: name, piority, status: !completed } }))
+        // await dispatch(fetchTodos({ piorityFilter }));
 
     };
 
@@ -27,14 +27,14 @@ export default function Todo({ name, priority, completed, id }) {
             justify='space-between'
             style={{
                 marginBottom: 3,
-                ...(checked ? { opacity: 0.5, textDecoration: 'line-through' } : {}),
+                ...(completed ? { opacity: 0.5, textDecoration: 'line-through' } : {}),
             }}
         >
-            <Checkbox checked={checked} onChange={toggleCheckbox}>
+            <Checkbox checked={completed} onChange={toggleCheckbox}>
                 {name}
             </Checkbox>
-            <Tag color={priorityColorMapping[priority]} style={{ margin: 0 }}>
-                {priority}
+            <Tag color={priorityColorMapping[piority]} style={{ margin: 0 }}>
+                {piority}
             </Tag>
         </Row>
     );

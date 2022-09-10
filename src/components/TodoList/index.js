@@ -1,47 +1,34 @@
 import { Col, Row, Input, Button, Select, Tag } from 'antd';
 import Todo from '../Todo';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
-import { v4 as uuidv4 } from 'uuid';
 import { useState } from 'react';
-import { todosRemainingSelector } from '../../redux/selectors';
-import { addNewTodo, deleteTodo } from './todosSlice'
-
+import { addNewTodo, deleteTodo, fetchTodos } from './todosSlice'
+import "./todoList.css"
 
 export default function TodoList() {
     const [todoName, setTodoName] = useState();
-    const [priority, setPriority] = useState('Medium');
+    const [priority, setPriority] = useState('medium');
 
-    const todoList = useSelector(todosRemainingSelector);
-    // const searchText = useSelector(searchTextSelector);
+    const piority = useSelector((state) => state.filters.piority)
+    const todoList = useSelector((state) => state.todoList.todos);
+    const searchText = useSelector((state) => state.filters.search)
 
-    console.log({ todoList });
+    console.log("Todolist :", todoList);
+
     const dispatch = useDispatch();
 
-    const handleButtonClick = () => {
-        // dispatch(
-        //     todosSlice.actions.addTodo({
-        //         id: uuidv4(),
-        //         name: todoName,
-        //         priority: priority,
-        //         completed: false
-        //     }))
-        dispatch(
-            addNewTodo({
-                id: uuidv4(),
-                name: todoName,
-                priority: priority,
-                completed: false
-            })
-        )
-        // dispatch(addTodos({
-        // id: uuidv4(),
-        // name: todoName,
-        // priority: priority,
-        // completed: false
-        // }))
+    const handleAddTodo = async () => {
 
+        await dispatch(
+            addNewTodo({
+                content: todoName,
+                piority: priority,
+                status: false
+            })
+        );
+        await dispatch(fetchTodos({ piority }))
         setTodoName("");
-        setPriority("Medium")
+        setPriority("medium")
 
     }
 
@@ -51,75 +38,84 @@ export default function TodoList() {
     const handlePriorityChange = (value) => {
         setPriority(value)
     }
-    const handleDelete = (id) => {
-        console.log("id", id);
-        dispatch(deleteTodo(id))
+    const handleDelete = async (id) => {
 
-        console.log("delete: ", deleteTodo(id))
+        await dispatch(deleteTodo({ id }));
+
+        await dispatch(fetchTodos({ piority }))
+
     }
+
     return (
 
-        <Row style={{ height: 'calc(100% - 40px)' }}>
-            <Col span={24} style={{ height: 'calc(100% - 40px)', overflowY: 'auto' }}>
-                {/* <Todo name='Learn React' prioriry='High' />
-                <Todo name='Learn Redux' prioriry='Medium' />
-                <Todo name='Learn JavaScript' prioriry='Low' /> */}
+        <Row >
 
-                {todoList.map(todo => {
+            <Col className='todoList' span={24}>
 
-                    return (
-                        <div >
+                {todoList.filter((item) => item.content.toLowerCase().includes(searchText.toLowerCase()))
+                    .map(todo => {
+                        return (
+                            <div key={todo.id}>
 
-                            <Row spacing={3}>
-                                <Col span={20}>
-                                    <Todo
-                                        key={todo.id}
-                                        name={todo.name}
-                                        priority={todo.priority}
-                                        completed={todo.completed}
-                                    />
-                                </Col>
+                                <Row spacing={3}>
+                                    <Col span={18} offset={1}>
+                                        <Todo
+                                            id={todo.id}
+                                            name={todo.content}
+                                            piority={todo.piority}
+                                            completed={todo.completed}
+                                        />
+                                    </Col>
 
-                                <Col span={3} offset={1}>
-                                    <Button
-                                        onClick={() => {
-                                            handleDelete(todo.id)
-                                        }}
-                                        size='small' style={{ marginBottom: "3px", backgroundColor: "#FF3333", color: "white" }}>
-                                        Delete
-                                    </Button>
-                                </Col>
-                            </Row>
+                                    <Col span={3} offset={1}>
 
-                        </div>
+                                        <Button
+                                            className='button_delete'
+                                            onClick={() => {
+                                                handleDelete(todo.id)
+                                            }}
+                                            size="small"
 
-                    )
+                                        >
+                                            Delete
+                                        </Button>
 
-                }
+                                    </Col>
+                                    <Col span={1}>
+                                    </Col>
+                                </Row>
+
+                            </div>
+
+                        )
+
+                    }
 
 
-                )}
+                    )}
 
-                <i class="fas fa-code"></i>
+                <i className="fas fa-code"></i>
             </Col>
             <Col span={24}>
                 <Input.Group style={{ display: 'flex' }} compact>
                     <Input value={todoName} onChange={handleInputChange} />
                     <Select
-                        defaultValue="Medium"
+
                         value={priority}
-                        onChange={handlePriorityChange}>
-                        <Select.Option value='High' label='High'>
-                            <Tag color='red'>High</Tag>
+                        onChange={(e) => handlePriorityChange(e)}>
+                        <Select.Option value='high' label='high'>
+                            <Tag color='red'>high</Tag>
                         </Select.Option>
-                        <Select.Option value='Medium' label='Medium'>
-                            <Tag color='blue'>Medium</Tag>
+                        <Select.Option value='medium' label='medium'>
+                            <Tag color='blue'>medium</Tag>
                         </Select.Option>
-                        <Select.Option value='Low' label='Low'>
-                            <Tag color='gray'>Low</Tag>
+                        <Select.Option value='low' label='low'>
+                            <Tag color='gray'>low</Tag>
                         </Select.Option>
                     </Select>
-                    <Button type='primary' onClick={handleButtonClick}>
+                    <Button
+                        type='primary'
+                        onClick={handleAddTodo}>
                         Add
                     </Button>
 

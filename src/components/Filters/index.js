@@ -1,33 +1,33 @@
-import { Col, Row, Input, Typography, Radio, Select, Tag } from 'antd';
-import { useState } from 'react';
+import { Col, Row, Input, Typography, Select, Tag } from 'antd';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux/es/hooks/useDispatch';
-// import { priorityFilterChange, searchFilterChange, statusFilterChange } from '../../redux/actions';
 import filtersSlice from './filtersSlice';
 
 const { Search } = Input;
 
 export default function Filters() {
 
+
     const dispatch = useDispatch();
 
-    const [searchText, setSearchText] = useState('');
-    const [filterStatus, setFilterStatus] = useState('All');
-    const [filterPriorities, setFilterPriorities] = useState([]);
+    const filters = useSelector(state => state.filters)
 
-    const handleSearchTextChange = (e) => {
-        setSearchText(e.target.value);
-        dispatch(filtersSlice.actions.searchFilterChange(e.target.value))
+    console.log("check filterPiority : ", filters.piority);
+    const handleSearchTextChange = e => {
 
+        const searchText = e.target.value;
+        dispatch(filtersSlice.actions.searchFilterChange(searchText))
 
     }
 
-    const handleStatusChange = (e) => {
-        setFilterStatus(e.target.value);
-        dispatch(filtersSlice.actions.statusFilterChange(e.target.value))
-    }
+
     const handlePriorityChange = (value) => {
-        setFilterPriorities(value);
+
+        console.log("check value piority : ", value);
+
         dispatch(filtersSlice.actions.prioritiesFilterChange(value))
+
+
     }
 
     return (
@@ -40,18 +40,18 @@ export default function Filters() {
                 </Typography.Paragraph>
                 <Search placeholder='input search text' onChange={handleSearchTextChange} />
             </Col>
-            <Col sm={24}>
+            {/* <Col sm={24}>
                 <Typography.Paragraph
                     style={{ fontWeight: 'bold', marginBottom: 3, marginTop: 10 }}
                 >
                     Filter By Status
                 </Typography.Paragraph>
-                <Radio.Group value={filterStatus} onChange={handleStatusChange}>
+                <Radio.Group value={filters.status} onChange={handleStatusChange}>
                     <Radio value='All'>All</Radio>
                     <Radio value='Completed'>Completed</Radio>
                     <Radio value='Todo'>To do</Radio>
                 </Radio.Group>
-            </Col>
+            </Col> */}
             <Col sm={24}>
                 <Typography.Paragraph
                     style={{ fontWeight: 'bold', marginBottom: 3, marginTop: 10 }}
@@ -63,17 +63,18 @@ export default function Filters() {
                     allowClear
                     placeholder='Please select'
                     style={{ width: '100%' }}
-                    value={filterPriorities}
+                    value={filters.piority}
                     onChange={handlePriorityChange}
                 >
-                    <Select.Option value='High' label='High'>
-                        <Tag color='red'>High</Tag>
+
+                    <Select.Option value='high' >
+                        <Tag color='red'>high</Tag>
                     </Select.Option>
-                    <Select.Option value='Medium' label='Medium'>
-                        <Tag color='blue'>Medium</Tag>
+                    <Select.Option value='medium'>
+                        <Tag color='blue'>medium</Tag>
                     </Select.Option>
-                    <Select.Option value='Low' label='Low'>
-                        <Tag color='gray'>Low</Tag>
+                    <Select.Option value='low' >
+                        <Tag color='gray'>low</Tag>
                     </Select.Option>
                 </Select>
             </Col>

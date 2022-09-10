@@ -1,30 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 
-export default createSlice({
+
+const filtersSlice = createSlice({
     name: 'filters',
     initialState: {
         search: '',
         status: 'All',
-        priorities: [],
+        piority: [],
     },
     reducers: {
         searchFilterChange: (state, action) => {
-            state.search = action.payload;
-
-        },
-        statusFilterChange: (state, action) => {
-            state.status = action.payload;
+            state.search = action.payload
         },
         prioritiesFilterChange: (state, action) => {
-            state.priorities = action.payload;
+            state.piority = action.payload;
         }
     }
 
+
 })
 
-
-
+export default filtersSlice;
 
 
 
