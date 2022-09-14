@@ -1,9 +1,10 @@
 import { Col, Row, Input, Button, Select, Tag } from 'antd';
 import Todo from '../Todo';
 import { useDispatch, useSelector } from 'react-redux/es/exports';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addNewTodo, deleteTodo, fetchTodos } from './todosSlice'
 import "./todoList.css"
+import filtersSlice from '../Filters/filtersSlice';
 
 export default function TodoList() {
     const [todoName, setTodoName] = useState();
@@ -12,9 +13,10 @@ export default function TodoList() {
     const piority = useSelector((state) => state.filters.piority)
     const todoList = useSelector((state) => state.todoList.todos);
     const searchText = useSelector((state) => state.filters.search)
+    const todoState = useSelector((state) => state)
 
     console.log("Todolist :", todoList);
-
+    console.log();
     const dispatch = useDispatch();
 
     const handleAddTodo = async () => {
@@ -45,18 +47,32 @@ export default function TodoList() {
         await dispatch(fetchTodos({ piority }))
 
     }
+    useEffect(() => {
+        dispatch(fetchTodos({ piority }));
+    }, [dispatch, piority])
+
+    useEffect(() => {
+        setTimeout(() => {
+            localStorage.setItem("filters", JSON.stringify(todoState.filters))
+        }, 100)
+    }, [dispatch, todoState.filters])
+
+    useEffect(() => {
+        const filter = localStorage.getItem("filters")
+        console.log("log2", JSON.parse(filter));
+        if (filter) {
+            dispatch(filtersSlice.actions.getDataLocal(JSON.parse(filter)))
+        }
+    }, [dispatch])
 
     return (
-
         <Row >
-
             <Col className='todoList' span={24}>
 
                 {todoList.filter((item) => item.content.toLowerCase().includes(searchText.toLowerCase()))
                     .map(todo => {
                         return (
                             <div key={todo.id}>
-
                                 <Row spacing={3}>
                                     <Col span={18} offset={1}>
                                         <Todo
@@ -66,34 +82,24 @@ export default function TodoList() {
                                             completed={todo.completed}
                                         />
                                     </Col>
-
                                     <Col span={3} offset={1}>
-
                                         <Button
                                             className='button_delete'
                                             onClick={() => {
                                                 handleDelete(todo.id)
                                             }}
                                             size="small"
-
                                         >
                                             Delete
                                         </Button>
-
                                     </Col>
                                     <Col span={1}>
                                     </Col>
                                 </Row>
-
                             </div>
-
                         )
-
                     }
-
-
                     )}
-
                 <i className="fas fa-code"></i>
             </Col>
             <Col span={24}>

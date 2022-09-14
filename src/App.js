@@ -2,23 +2,22 @@ import { Typography, Divider } from 'antd';
 import './App.css';
 import TodoList from './components/TodoList';
 import Filters from './components/Filters';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux/es/exports';
-import { fetchTodos } from './components/TodoList/todosSlice';
+
 
 
 const { Title } = Typography;
 
 function App() {
-  const dispatch = useDispatch();
 
-  const piority = useSelector((state) => state.filters.piority)
-  // const status = useSelector((state) => state.todoList.status)
+  // const dispatch = useDispatch();
 
-  console.log("check piority : ", piority);
-  useEffect(() => {
-    dispatch(fetchTodos({ piority }));
-  }, [dispatch, piority])
+
+  // console.log("todoState.filters", todoState.filters);
+
+
+
+
+
 
 
   return (

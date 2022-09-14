@@ -3,7 +3,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 const todosSlice = createSlice({
     name: 'todoList',
     initialState: { status: 'idle', todos: [] },
-    reducers: {},
+    reducers: {
+
+    },
 
     extraReducers: (builder) => {
         builder
@@ -12,7 +14,6 @@ const todosSlice = createSlice({
             })
             .addCase(fetchTodos.fulfilled, (state, action) => {
                 state.todos = action.payload;
-                console.log("check action: ", action);
                 state.status = "idle"
             })
             .addCase(addNewTodo.pending, () => {

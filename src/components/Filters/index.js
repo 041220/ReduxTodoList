@@ -1,33 +1,41 @@
 import { Col, Row, Input, Typography, Select, Tag } from 'antd';
+
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux/es/hooks/useDispatch';
+
 import filtersSlice from './filtersSlice';
 
 const { Search } = Input;
 
 export default function Filters() {
 
+    const filters = useSelector(state => state.filters)
+    // const stateTodo = useSelector((state) => state)
 
     const dispatch = useDispatch();
 
-    const filters = useSelector(state => state.filters)
+    // useEffect(() => {
+    //     dispatch(fetchTodos({ piority: stateTodo.filters.piority }));
+    // }, [dispatch, stateTodo.filters.piority])
+
+
+    // localStorage.setItem("filters", JSON.stringify(stateTodo.filters))
+
+    // const filter = localStorage.getItem("filters")
+
+    // if (filter) {
+    //     dispatch(filtersSlice.actions.getDataLocal(JSON.parse(filter)))
+    // }
 
     console.log("check filterPiority : ", filters.piority);
     const handleSearchTextChange = e => {
-
         const searchText = e.target.value;
         dispatch(filtersSlice.actions.searchFilterChange(searchText))
 
     }
-
-
     const handlePriorityChange = (value) => {
-
         console.log("check value piority : ", value);
-
         dispatch(filtersSlice.actions.prioritiesFilterChange(value))
-
-
     }
 
     return (
@@ -38,7 +46,7 @@ export default function Filters() {
                 >
                     Search
                 </Typography.Paragraph>
-                <Search placeholder='input search text' onChange={handleSearchTextChange} />
+                <Search value={filters.search} placeholder='input search text' onChange={handleSearchTextChange} />
             </Col>
             {/* <Col sm={24}>
                 <Typography.Paragraph

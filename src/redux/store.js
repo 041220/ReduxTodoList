@@ -16,7 +16,9 @@ const store = configureStore({
     reducer: {
         filters: filtersSlice.reducer,
         todoList: todosSlice.reducer,
-    }
+    },
+
+
 })
 
 export default store;

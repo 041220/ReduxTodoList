@@ -15,6 +15,12 @@ const filtersSlice = createSlice({
         },
         prioritiesFilterChange: (state, action) => {
             state.piority = action.payload;
+        },
+        getDataLocal: (state, action) => {
+            console.log("action.payload", action.payload);
+            state.search = action.payload.search;
+            state.piority = action.payload.piority;
+
         }
     }
 
