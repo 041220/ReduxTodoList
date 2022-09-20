@@ -19,20 +19,16 @@ const todosSlice = createSlice({
             .addCase(addNewTodo.pending, () => {
 
             })
-            .addCase(addNewTodo.fulfilled, () => {
+            .addCase(addNewTodo.fulfilled, (state, action) => {
+                state.todos.push(action.payload)
 
             })
-            .addCase(updateTodo.pending, () => {
 
-            })
-            .addCase(updateTodo.fulfilled, () => {
-
-            })
             .addCase(deleteTodo.pending, () => {
 
             })
-            .addCase(deleteTodo.fulfilled, () => {
-
+            .addCase(deleteTodo.fulfilled, (state, action) => {
+                state.todos = state.todos.filter((todo) => todo.id !== action.payload.id)
             })
 
     }
@@ -63,7 +59,7 @@ export const addNewTodo = createAsyncThunk(
         })
         const data = await res.json();
         console.log("res post: ", { res });
-        return data.todos;
+        return data;
     })
 
 export const updateTodo = createAsyncThunk(
@@ -87,7 +83,7 @@ export const deleteTodo = createAsyncThunk(
         })
         const data = await res.json();
         console.log("delete data: ", { data });
-        return data;
+        return params;
     })
 
 export default todosSlice;

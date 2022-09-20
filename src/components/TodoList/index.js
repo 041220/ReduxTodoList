@@ -7,8 +7,11 @@ import "./todoList.css"
 import filtersSlice from '../Filters/filtersSlice';
 
 export default function TodoList() {
+
+
     const [todoName, setTodoName] = useState();
     const [priority, setPriority] = useState('medium');
+
 
     const piority = useSelector((state) => state.filters.piority)
     const todoList = useSelector((state) => state.todoList.todos);
@@ -19,6 +22,36 @@ export default function TodoList() {
     console.log();
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch(fetchTodos({ piority }));
+    }, [dispatch, piority])
+
+    useEffect(() => {
+        console.log("log 1");
+        setTimeout(() => {
+            localStorage.setItem("filters", JSON.stringify(todoState.filters))
+        }, 100)
+    }, [dispatch, todoState.filters])
+
+    useEffect(() => {
+        const filter = localStorage.getItem("filters")
+        console.log("log2", JSON.parse(filter));
+        if (filter) {
+            dispatch(filtersSlice.actions.getDataLocal(JSON.parse(filter)))
+        }
+    }, [dispatch])
+
+    useEffect(() => {
+        if (todoName) {
+            console.log("title 1", document.title);
+            document.title = "addnew ..."
+        }
+        else {
+            console.log("title 2", document.title);
+            document.title = "React App"
+        }
+    }, [todoName])
+
     const handleAddTodo = async () => {
 
         await dispatch(
@@ -28,7 +61,7 @@ export default function TodoList() {
                 status: false
             })
         );
-        await dispatch(fetchTodos({ piority }))
+
         setTodoName("");
         setPriority("medium")
 
@@ -44,26 +77,9 @@ export default function TodoList() {
 
         await dispatch(deleteTodo({ id }));
 
-        await dispatch(fetchTodos({ piority }))
 
     }
-    useEffect(() => {
-        dispatch(fetchTodos({ piority }));
-    }, [dispatch, piority])
 
-    useEffect(() => {
-        setTimeout(() => {
-            localStorage.setItem("filters", JSON.stringify(todoState.filters))
-        }, 100)
-    }, [dispatch, todoState.filters])
-
-    useEffect(() => {
-        const filter = localStorage.getItem("filters")
-        console.log("log2", JSON.parse(filter));
-        if (filter) {
-            dispatch(filtersSlice.actions.getDataLocal(JSON.parse(filter)))
-        }
-    }, [dispatch])
 
     return (
         <Row >
